@@ -1,4 +1,0 @@
-$: -1304664075
-BuildCommand: build.sh
-RunCommand: run.sh
-Product: build/Release-iphoneos/dynamic-tab-bar.app/dynamic-tab-bar

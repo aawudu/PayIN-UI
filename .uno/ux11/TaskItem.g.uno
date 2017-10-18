@@ -18,14 +18,14 @@ public partial class TaskItem: Fuse.Controls.DockPanel
     void InitializeUX()
     {
         var temp = new global::Fuse.Controls.Image();
-        temp_File_inst = new dynamictabbar_FuseControlsImage_File_Property(temp, __selector0);
+        temp_File_inst = new payinui_FuseControlsImage_File_Property(temp, __selector0);
         var temp3 = new global::Fuse.Reactive.Data("image");
         __g_nametable = new global::Uno.UX.NameTable(null, __g_static_nametable);
         var temp1 = new global::Fuse.Controls.Text();
-        temp1_Value_inst = new dynamictabbar_FuseControlsTextControl_Value_Property(temp1, __selector1);
+        temp1_Value_inst = new payinui_FuseControlsTextControl_Value_Property(temp1, __selector1);
         var temp4 = new global::Fuse.Reactive.Data("text");
         var temp2 = new global::Fuse.Controls.Text();
-        temp2_Value_inst = new dynamictabbar_FuseControlsTextControl_Value_Property(temp2, __selector1);
+        temp2_Value_inst = new payinui_FuseControlsTextControl_Value_Property(temp2, __selector1);
         var temp5 = new global::Fuse.Reactive.Data("timeSlot");
         var temp6 = new global::Fuse.Reactive.DataBinding(temp_File_inst, temp3, __g_nametable, Fuse.Reactive.BindingMode.Default);
         var temp7 = new global::Fuse.Controls.Grid();
