@@ -1,0 +1,651 @@
+<App>
+	<JavaScript>
+	var Observable = require("FuseJS/Observable");
+
+	var data = Observable();
+	var items = Observable();
+	var user = Observable();
+	var item1s = Observable({name: "Deposit"}, {name: "Withdraw"});
+	var itemsTwo = Observable({name: "Small Wheels"}, {name: "Big Wheels"});
+
+
+	fetch('http://techloftgh.com/payInRegistration/payin_news.json')
+	.then(function(response) { return response.json(); })
+	.then(function(responseObject) { data.value = responseObject; });
+
+	fetch('http://techloftgh.com/payInRegistration/payin_social.json')
+	.then(function(response) { return response.json(); })
+	.then(function(responseObject) { items.value = responseObject; });
+
+	fetch('http://techloftgh.com/payInRegistration/payin_user.json')
+	.then(function(response) { return response.json(); })
+	.then(function(responseObject) { user.value = responseObject; });
+
+
+	module.exports = {
+		data: data,
+		items: items,
+		user: user,
+		item1s: items,
+		itemsTwo: itemsTwo
+	};
+	</JavaScript>
+
+	<Panel>
+
+		<Fuse.iOS.StatusBarConfig Style="Light" />
+
+		<Panel ux:Name="transitionScaleGuide" Width="500%" Height="500%" Alignment="Center" HitTestMode="None" BoxSizing="FillAspect" Aspect="1" />
+
+		<DockPanel ux:Class="TaskItem" Height="80" Margin="1" Background="#fff" Padding="15,20">
+			<Image Width="50" Height="50" Dock="Left" File="{image}" />
+			<Grid RowCount="2" Margin="40,0">
+				<Text Value="{text}" />
+				<Text Value="{timeSlot}" Color="#999" />
+			</Grid>
+		</DockPanel>
+
+		<UserEvent Name="ToggleLoggedIn" />
+		<DockPanel>
+			<Panel>
+				<Panel ux:Name="plusButton" Width="60" Height="60" Alignment="BottomRight" Margin="20" Opacity="0" IsEnabled="false">
+					<Panel ux:Name="cross">
+						<Rectangle Width="30%" Height="2" Color="#fff" />
+						<Rectangle Height="30%" Width="2" Color="#fff" />
+					</Panel>
+
+					<WhileTrue ux:Name="showPlusButton">
+						<Change plusButtonScaling.Factor="1" Duration="0.4" Easing="CircularInOut" DurationBack="0" />
+					</WhileTrue>
+
+					<Scaling ux:Name="plusButtonScaling" Factor="0.1" />
+
+					<Clicked>
+						<Toggle Target="loading" Delay="0.2" />
+						<RaiseUserEvent EventName="ToggleLoggedIn" Delay="0.3" />
+						<Change scalePlusButton.Value="true" />
+						<Nothing Duration="0.8" />
+					</Clicked>
+
+					<WhileTrue ux:Name="scalePlusButton">
+						<Change cross.Opacity="0" Duration="0.1" />
+						<Scale Target="plusButtonTransitionCircle" Factor="2.5" RelativeTo="SizeFactor" RelativeNode="transitionScaleGuide" Duration="0.6" Easing="ExponentialInOut" DurationBack="0" />
+						<Change plusButtonTranslation.Y="-0.5" Duration="0.6" Easing="ExponentialInOut" DurationBack="0" />
+						<Change plusButtonTranslation.X="-0.5" Duration="0.6" Easing="ExponentialInOut" DurationBack="0" />
+					</WhileTrue>
+
+					<Translation ux:Name="plusButtonTranslation" RelativeTo="ParentSize" />
+
+					<Circle ux:Name="plusButtonTransitionCircle" Layer="Background" Width="236" Height="236">
+						<Scaling ux:Name="plusButtonCircleScaling" Factor="0.25" />
+					</Circle>
+
+					<Circle ux:Name="plusButtonBackgroundCircle" Layer="Background" />
+				</Panel>
+
+<Panel ux:Name="loggedInView" Opacity="0" IsEnabled="false">
+	<ClientPanel>
+		<Grid Columns="auto,1*,auto" Height="50" Dock="Top" Margin="5">
+			<Grid ColumnCount="2" RowCount="2" Width="22" Height="22" Margin="10">
+				<Each Count="4">
+					<Circle Color="color4" Margin="1.5" />
+				</Each>
+			</Grid>
+			<!-- <Text ux:Name="titleText" Value="PAY IN" Color="color0" FontSize="25" Alignment="Center">
+				<Font File="Assets/Fonts/Roboto-Black.ttf" />
+			</Text> -->
+			<Image File="Assets/marklogin.png" Color="color4" Width="60%" Height="60%" Alignment="Center" />
+			<!-- <Image File="Assets/search.png" Color="color4" Width="30" Height="30" Margin="10" />-->	
+		</Grid>
+
+
+
+		<Panel Dock="Top" Height="60">
+			<Rectangle ux:Name="indicator" CornerRadius="30" Color="color0" LayoutMaster="p1" Margin="0,10" Width="100%" ZOffset="0.1" />
+			<Grid ColumnCount="5" Margin="-30,0">
+				<Panel ux:Name="p1" Column="0" ColumnSpan="2" />
+				<Panel ux:Name="p4" Column="3" ColumnSpan="2" />
+			</Grid>
+
+			<Grid ZOffset="1" Margin="-20,0">
+				<Column ux:Name="col1" Width="1" WidthMetric="Proportion" />
+				<Column ux:Name="col2" Width="1" WidthMetric="Proportion" />
+				<Column ux:Name="col3" Width="1" WidthMetric="Proportion" />
+				<Column ux:Name="col4" Width="1" WidthMetric="Proportion" />
+
+				<Text ux:Class="TabHeader" Color="White" Alignment="CenterLeft" Opacity="0" Margin="20,0,0,0" MinWidth="100" />
+				<Image ux:Class="TabIcon" Width="25" Height="25" />
+
+				<Panel HitTestMode="LocalBounds">
+					<Grid Columns="auto,1*" Margin="40,0" Alignment="Left">
+						<TabIcon ux:Name="c1" File="Assets/basket.png" Color="color0" />
+						<TabHeader ux:Name="h1" Value="Pay" />
+					</Grid>
+					<Clicked>
+						<Set nav.Visibility="Visible" />
+						<Set montran.Visibility="Hidden" />
+						<Set airtime.Visibility="Hidden" />
+						<Set internet.Visibility="Hidden" />
+						<Set utility.Visibility="Hidden" />
+						<Set sharebill.Visibility="Hidden" />
+						<Set nav.Active="page1" />
+					</Clicked>
+				</Panel>
+				<Panel HitTestMode="LocalBounds">
+					<Grid Columns="auto,1*" Margin="30,0" Alignment="Left">
+						<TabIcon ux:Name="c2" File="Assets/accountbalance.png" Color="color1" />
+						<TabHeader ux:Name="h2" Value="Social" />
+					</Grid>
+					<Clicked>
+						<Set nav.Visibility="Visible" />
+						<Set montran.Visibility="Hidden" />
+						<Set airtime.Visibility="Hidden" />
+						<Set internet.Visibility="Hidden" />
+						<Set utility.Visibility="Hidden" />
+						<Set sharebill.Visibility="Hidden" />
+						<Set nav.Active="page2" />
+					</Clicked>
+				</Panel>
+				<Panel HitTestMode="LocalBounds">
+					<Grid Columns="auto,1*" Margin="30,0" Alignment="Left">
+						<TabIcon ux:Name="c3" File="Assets/play.png" Color="color2" />
+						<TabHeader ux:Name="h3" Value="Notice" />
+
+					</Grid>
+					<Clicked>
+						<Set nav.Visibility="Visible" />
+						<Set montran.Visibility="Hidden" />
+						<Set airtime.Visibility="Hidden" />
+						<Set internet.Visibility="Hidden" />
+						<Set utility.Visibility="Hidden" />
+						<Set sharebill.Visibility="Hidden" />
+						<Set nav.Active="page3" />
+					</Clicked>
+				</Panel>
+				<Panel HitTestMode="LocalBounds">
+					<Grid Columns="auto,1*" Margin="30,0" Alignment="Left">
+						<TabIcon ux:Name="c4" File="Assets/person.png" Color="color3" />
+						<TabHeader ux:Name="h4" Value="User" />
+					</Grid>
+					<Clicked>
+						<Set nav.Visibility="Visible" />
+						<Set montran.Visibility="Hidden" />
+						<Set airtime.Visibility="Hidden" />
+						<Set internet.Visibility="Hidden" />
+						<Set utility.Visibility="Hidden" />
+						<Set sharebill.Visibility="Hidden" />
+						<Set nav.Active="page4" />
+					</Clicked>
+				</Panel>
+			</Grid>
+		</Panel>
+		<PageControl ux:Name="nav">
+			<NavigationMotion GotoEasing="BackOut" />
+			<Attractor ux:Name="indicatorColorAttractor" Target="indicator.Color" Value="color0" />
+			<Rectangle ux:Name="bgColor" Layer="Background" Color="color0" Opacity="0.12" />
+			<Attractor ux:Name="bgColorAttractor" Target="bgColor.Color" Value="color0" />
+<!-- 			<Attractor ux:Name="titleTextAttractor" Target="titleText.Color" Value="color0" /> -->
+
+			<TextInput ux:Class="MyTextInput" FontSize="20" PlaceholderColor="#ccc" Padding="5">
+				<Rectangle Layer="Background" CornerRadius="3" Row="0" Column="0" Alignment="Bottom" ColumnSpan="2" Height="1" Color="#fff">
+					<Stroke Width="1" Color="#ccc" />
+					<SolidColor Color="White" />
+				</Rectangle>
+			</TextInput>
+
+			<WhileTrue ux:Name="shrinkIndicatorWidth">
+				<Change indicator.Width="90" Duration="0.25" />
+			</WhileTrue>
+
+			<Image ux:Class="PagePlaceholder" Margin="8,10,8,0" StretchMode="UniformToFill" ContentAlignment="Top" />
+
+			<Page ux:Name="page1">
+				<!-- <PagePlaceholder File="Assets/screen1.png" /> -->
+
+				<StackPanel>
+					<DockPanel Height="80">
+						<Image File="Assets/icon/userlogo.png" Width="70" Height="70" Margin="10" Alignment="CenterLeft" />
+						<Rectangle X="70" Height="35" Y="5" Color="#fff" Opacity="1" CornerRadius="10" Alignment="CenterLeft">
+							<Text Alignment="Center" Margin="5, 5, 5, 5" Value="-- Hello Kuuku Aboagye --" FontSize="10" />
+						</Rectangle>
+					</DockPanel>
+					<DockPanel Height="80">
+						<Rectangle X="105" Height="70" Width="250" Y="5" Color="#fff" Opacity="1">
+							<Text Alignment="Center" Margin="5, 5, 5, 5" Value="Transfer money from your mobile money, credit card and bank account from here" FontSize="10" TextWrapping="Wrap" />
+						</Rectangle>
+						<Rectangle Width="120" Height="70" X="5" Y="5" Color="#39B44A" CornerRadius="15">
+							<Image File="Assets/icon/moneytransfer.png" X="10" Width="70%" Alignment="CenterLeft" />
+						</Rectangle>
+
+						<Clicked>
+							<Set nav.Visibility="Hidden" />
+							<Set montran.Visibility="Visible" />
+							<Set montran.Active="moneytransform" />
+						</Clicked>
+					</DockPanel>
+					<DockPanel Height="80">
+						<Rectangle X="105" Height="70" Width="250" Y="5" Color="#fff">
+							<Text Value="-- your most frequent purchased utility here --" FontSize="10" Alignment="Center" TextWrapping="Wrap" />
+						</Rectangle>
+						<Rectangle Width="120" Height="70" Color="#E8B402" Y="5" X="5" CornerRadius="15">
+							<Image File="Assets/icon/airtime.png" X="10" Width="70%" Alignment="CenterLeft" />
+						</Rectangle>
+
+						<Clicked>
+							<Set nav.Visibility="Hidden" />
+							<Set airtime.Visibility="Visible" />
+							<Set airtime.Active="airtimeform" />
+						</Clicked>
+					</DockPanel>
+					<DockPanel Height="80">
+						<Rectangle X="105" Height="70" Width="250" Y="5" Color="#fff">
+							<Text Value="-- your most frequent purchased utility here --" FontSize="10" Alignment="Center" TextWrapping="Wrap" />
+						</Rectangle>
+						<Rectangle Width="120" Height="70" Color="#0071BB" Y="5" X="5" CornerRadius="15">
+							<Image File="Assets/icon/internet.png" X="10" Width="70%" Alignment="CenterLeft" />
+						</Rectangle>
+						<Clicked>
+							<Set nav.Visibility="Hidden" />
+							<Set internet.Visibility="Visible" />
+							<Set internet.Active="internetform" />
+						</Clicked>
+					</DockPanel>
+					<DockPanel Height="80">
+						<Rectangle X="105" Height="70" Width="250" Y="5" Color="#fff">
+							<Text Value="-- your most frequent purchased utility here --" FontSize="10" Alignment="Center" TextWrapping="Wrap" />
+						</Rectangle>
+						<Rectangle Width="120" Height="70" Color="#92278E" Y="5" X="5" CornerRadius="15">
+							<Image File="Assets/icon/utility.png" X="20" Width="50%" Alignment="CenterLeft" />
+						</Rectangle>
+						<Clicked>
+							<Set nav.Visibility="Hidden" />
+							<Set utility.Visibility="Visible" />
+							<Set utility.Active="utilityform" />
+						</Clicked>
+					</DockPanel>
+					<DockPanel Height="80">
+						<Rectangle X="105" Height="70" Width="250" Y="5" Color="#fff">
+							<Text Value="-- your most frequent purchased utility here too--" FontSize="10" Alignment="Center" TextWrapping="Wrap" />
+						</Rectangle>
+						<Rectangle Width="120" Height="70" Color="#D3145A" Y="5" X="5" CornerRadius="15">
+							<Image File="Assets/icon/sharebill.png" X="20" Width="50%" Alignment="CenterLeft" />
+						</Rectangle>
+						<Clicked>
+							<Set nav.Visibility="Hidden" />
+							<Set sharebill.Visibility="Visible" />
+							<Set sharebill.Active="sharebillform" />
+						</Clicked>
+					</DockPanel>
+					<DockPanel Alignment="BottomCenter">
+						<!-- <Text Value="click here to enroll your products in PayIn services" Alignment="BottomCenter" FontSize="10"/> -->
+						<Rectangle Width="320" Height="70" Color="#007CB3" X="5" CornerRadius="15" Alignment="BottomCenter" Dock="Bottom">
+							<!-- <Image File="Assets/icon/sharebill.png" X="20" Width="50%" Alignment="CenterLeft"/> -->
+						</Rectangle>
+					</DockPanel>
+				</StackPanel>
+
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<!-- <Set titleTextAttractor.Value="color0" /> -->
+				</WhileActive>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+			<Page ux:Name="page2">
+				<!-- <PagePlaceholder File="Assets/screen2.png" /> -->
+				<StackPanel>
+					<Panel>
+						<Button Alignment="CenterRight" Text="Send" Margin="5">
+							<Clicked>
+								<Set text.Value="" />
+							</Clicked>
+						</Button>
+						<TextInput ux:Name="text" PlaceholderText="Text field" PlaceholderColor="#ccc" Height="50" Padding="5">
+							<Rectangle Layer="Background">
+								<Stroke Width="2" Brush="#BBB" />
+							</Rectangle>
+						</TextInput>
+					</Panel>
+					<ScrollView>
+						<StackPanel Alignment="Top">
+							<Panel Height="7" />
+							<Each Items="{data.responseData}">
+								<NewsItem />
+							</Each>
+						</StackPanel>
+					</ScrollView>
+
+				</StackPanel>
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="true" />
+					<Set indicatorColorAttractor.Value="color1" />
+					<Set bgColorAttractor.Value="color1" />
+				<!-- 	<Set titleTextAttractor.Value="color1" /> -->
+				</WhileActive>
+				<ActivatingAnimation>
+					<Change h2.Opacity="1" />
+					<Change col2.Width="2" />
+					<Change c2.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+			<Page ux:Name="page3">
+				<!-- <PagePlaceholder File="Assets/screen3.png" /> -->
+				<ScrollView>
+					<StackPanel Alignment="Top">
+						<Panel Height="3" />
+						<Each Items="{items.responseData}">
+							<NewsItem />
+						</Each>
+					</StackPanel>
+				</ScrollView>
+
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="true" />
+					<Set indicatorColorAttractor.Value="color2" />
+					<Set bgColorAttractor.Value="color2" />
+					<!-- <Set titleTextAttractor.Value="color2" /> -->
+				</WhileActive>
+				<ActivatingAnimation>
+					<Change h3.Opacity="1" />
+					<Change col3.Width="2" />
+					<Change c3.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+			<Page ux:Name="page4">
+				<!-- <PagePlaceholder File="Assets/screen4.png" /> -->
+				<StackPanel Alignment="Top">
+					<Panel Height="1" />
+					<Each Items="{user.userdata}">
+						<NewsItem />
+					</Each>
+
+					<ScrollView>
+						<StackPanel Alignment="Top">
+							<Panel Height="3" />
+							<Each Items="{user.historydata}">
+								<NewsItem />
+							</Each>
+						</StackPanel>
+					</ScrollView>
+				</StackPanel>
+
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color3" />
+					<Set bgColorAttractor.Value="color3" />
+					<!-- <Set titleTextAttractor.Value="color3" /> -->
+				</WhileActive>
+				<ActivatingAnimation Scale="0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p4" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h4.Opacity="1" />
+					<Change col4.Width="2" />
+					<Change c4.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+
+			<!--<Page ux:Name="util">
+				 <PagePlaceholder File="Assets/screen1.png" /> 				
+				 <Text Value="This is Util Page" />
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<Set titleTextAttractor.Value="color0" />
+				</WhileActive>
+				<ActivatingAnimation Scale="-0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p1" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page> -->
+		</PageControl>
+		<PageControl ux:Name="montran" Visibility="Hidden">
+			<Page ux:Name="moneytransform">
+				<StackPanel Margin="10" ItemSpacing="10">
+<!-- 					<MyTextInput PlaceholderText="Account Number" ActionStyle="Search" AutoCapitalizationHint="None" />
+					<MyTextInput PlaceholderText="Destination Account" InputHint="Email" ActionStyle="Send" AutoCorrectHint="Disabled" AutoCapitalizationHint="None" />
+					<MyTextInput PlaceholderText="Amount" InputHint="Decimal" ActionStyle="Go" AutoCorrectHint="Disabled" AutoCapitalizationHint="None" />
+					<MyTextInput PlaceholderText="+47 123 456 789" InputHint="Phone" />
+					<MyTextInput PlaceholderText="1234" InputHint="Number" />
+					<MyTextInput PlaceholderText="1.234" InputHint="Decimal" />
+					<MyTextInput PlaceholderText="1" InputHint="Integer" />
+					<DropdownMenu ux:Name="dropOne" ListItems="{item1s}" BackgroundColor="#FDFDFD" BorderColor="#BFBFBF" />
+					<DropdownMenu Margin="0,10,0,0" ux:Name="dropTwo" ListItems="{itemsTwo}" BackgroundColor="#FDFDFD" BorderColor="#BFBFBF" /> -->
+					<Grid Columns="auto,1*">
+					<MyTextInput PlaceholderText="Account Number" InputHint="Number" />
+					<MenuButton />
+					</Grid>
+					<MyTextInput PlaceholderText="Destination Account" InputHint="Number" />
+					<MyTextInput PlaceholderText="Amount" InputHint="Decimal" />
+					<DropdownMenu ux:Name="dropOne" ListItems="{item1s}" BackgroundColor="#FDFDFD" BorderColor="#BFBFBF" />
+					<Button Text="pay" />
+				</StackPanel>
+
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<!-- <Set titleTextAttractor.Value="color0" /> -->
+				</WhileActive>
+				<ActivatingAnimation Scale="0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p1" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+		</PageControl>
+
+		<PageControl ux:Name="airtime" Visibility="Hidden">
+			<Page ux:Name="airtimeform">
+				<!-- <PagePlaceholder File="Assets/screen1.png" /> -->
+				<Text Value="This is pay in ENROLL  Page 1.2.2.2.2" />
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<!-- <Set titleTextAttractor.Value="color0" /> -->
+				</WhileActive>
+				<ActivatingAnimation Scale="0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p1" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+		</PageControl>
+
+		<PageControl ux:Name="internet" Visibility="Hidden">
+			<Page ux:Name="internetform">
+				<!-- <PagePlaceholder File="Assets/screen1.png" /> -->
+				<Text Value="This is Internet Page" />
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<!-- <Set titleTextAttractor.Value="color0" /> -->
+				</WhileActive>
+				<ActivatingAnimation Scale="0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p1" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+		</PageControl>
+
+		<PageControl ux:Name="utility" Visibility="Hidden">
+			<Page ux:Name="utilityform">
+				<!-- <PagePlaceholder File="Assets/screen1.png" /> -->
+				<Text Value="This is pay in ENROLL  Page 1.2.2.2.2" />
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<!-- <Set titleTextAttractor.Value="color0" /> -->
+				</WhileActive>
+				<ActivatingAnimation Scale="0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p1" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+		</PageControl>
+
+		<PageControl ux:Name="sharebill" Visibility="Hidden">
+			<Page ux:Name="sharebillform">
+				<!-- <PagePlaceholder File="Assets/screen1.png" /> -->
+				<Text Value="This is pay in ENROLL  Page 1.2.2.2.2" />
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<!-- <Set titleTextAttractor.Value="color0" /> -->
+				</WhileActive>
+				<ActivatingAnimation Scale="0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p1" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+		</PageControl>
+
+		<PageControl ux:Name="payinServices" Visibility="Hidden">
+			<Page ux:Name="payinservicesform">
+				<!-- <PagePlaceholder File="Assets/screen1.png" /> -->
+				<Text Value="This is pay in services Page" />
+				<WhileActive Threshold="0.5">
+					<Set shrinkIndicatorWidth.Value="false" />
+					<Set indicatorColorAttractor.Value="color0" />
+					<Set bgColorAttractor.Value="color0" />
+					<!-- <Set titleTextAttractor.Value="color0" /> -->
+				</WhileActive>
+				<ActivatingAnimation Scale="0.333">
+					<Move Target="indicator" X="1" RelativeTo="PositionOffset" RelativeNode="p1" />
+				</ActivatingAnimation>
+				<ActivatingAnimation>
+					<Change h1.Opacity="1" />
+					<Change col1.Width="2" />
+					<Change c1.Color="White" />
+				</ActivatingAnimation>
+			</Page>
+		</PageControl>
+	</ClientPanel>
+	</Panel>
+
+			</Panel>
+			<BottomBarBackground Dock="Bottom" />
+		</DockPanel>
+
+		<WhileTrue ux:Name="loading">
+			<Change changeWidth.Value="true" DelayBack="0" />
+			<Change loadCircle.Value="true" DelayBack="0" />
+
+			<Change scaleAndFade.Value="true" Delay="2.5" DelayBack="0" />
+			<Change showLoggedIn.Value="true" Delay="2.9" />
+		</WhileTrue>
+		<WhileTrue ux:Name="changeWidth">
+			<Change rectNormalScale.Width="60" Duration=".5" DurationBack="0" Easing="CircularInOut" />
+		</WhileTrue>
+		<WhileTrue ux:Name="loadCircle">
+			<Change text1.Opacity="0" Duration="0.2" DurationBack="0" />
+			<Change loadingCircle.Opacity="1" Duration="0.3" Delay="0.2" DelayBack="0" DurationBack="0" />
+			<Spin Target="loadingCircle" Frequency="2" />
+			<Cycle Target="loadingCircle.LengthAngleDegrees" Low="30" High="300" Frequency="0.7" />
+		</WhileTrue>
+		<WhileTrue ux:Name="scaleAndFade">
+			<Change loadingCirclePanel.Opacity="0" Duration="0.1" />
+			<Change loadingButton.Opacity="1" Duration="0.01" />
+			<Change rectNormalScale.Opacity="0" Duration="0.01" />
+			<Scale Target="loadingButton" Factor="3" RelativeTo="SizeFactor" RelativeNode="transitionScaleGuide" Delay="0.01" Duration="0.7" Easing="ExponentialInOut" DurationBack="0" />
+		</WhileTrue>
+		<WhileTrue ux:Name="showLoggedIn">
+			<Change loggedInView.Opacity="1" Delay="0.1" Duration="0.65" DurationBack="0.35" DelayBack="0.2" Easing="CubicInOut" />
+			<Change loggedInView.IsEnabled="true" />
+<!-- 			<Change plusButton.Opacity="1" Delay="0.1" Duration="0.65" DurationBack="0.7" DelayBack="0.3" Easing="CubicInOut"/>
+
+			<Change goodMorningText.Opacity="1" Duration="0.3" Delay="0.3"/>
+			<Change monthPanel.Opacity="1" Duration="0.3" Delay="0.3"/>
+
+			<Change weekTranslation.Y="0" Duration="0.8" Easing="QuadraticInOut"/>
+			<Change weekScaling.Factor="1" Duration="0.8" Easing="QuadraticInOut"/>
+			<Change headerScaling.Factor="1" Duration="0.6" Easing="CircularInOut" />
+			<Change showPlusButton.Value="true" />
+			<RaiseUserEvent EventName="ToggleLoggedIn" />
+
+			<Change profile.Opacity="1" Delay="0.7" Duration="0.1" DurationBack="0.2" DelayBack="0"/>
+			<Change profileScaling.Factor="1" Delay="0.7" Duration="0.4" Easing="CircularInOut"/>
+			
+			<Change plusButton.IsEnabled="true" /> -->
+		</WhileTrue>
+
+		<Grid ux:Name="loggedOutView" Rows="1.5*,auto,1*" Padding="40,0">
+			<WhileKeyboardVisible>
+				<Move Target="mark" Y="-200" Duration=".6" Easing="ExponentialInOut" />
+				<Move Target="loginArea" Y="-200" Duration=".6" Easing="ExponentialInOut" />
+			</WhileKeyboardVisible>
+
+			<Rectangle Layer="Background">
+				<ImageFill File="Assets/bglogin.png" WrapMode="ClampToEdge" />
+			</Rectangle>
+
+			<Panel Row="2" Width="150" Height="60">
+				<Text ux:Name="text1" Alignment="Center" Value="Register" FontSize="18" Color="#fff" />
+				<Panel ux:Name="loadingCirclePanel">
+					<Circle ux:Name="loadingCircle" Width="70%" Height="70%" Opacity="0" StartAngleDegrees="0" LengthAngleDegrees="90">
+						<Stroke Width="1" Brush="#fff" />
+					</Circle>
+				</Panel>
+				<Clicked>
+					<Toggle Target="loading" />
+				</Clicked>
+				<Rectangle ux:Name="rectNormalScale" CornerRadius="20" Color="#007cb6" Width="300" Height="30" Opacity="0.8" />
+				<Circle ux:Name="loadingButton" Opacity="0" Alignment="Center" Layer="Background" Width="240" Height="240" Color="#e9e9e9">
+					<Scaling Factor="0.25" />
+				</Circle>
+			</Panel>
+
+			<Image ux:Name="mark" Row="0" File="Assets/marklogin.png" Margin="40" />
+
+			<Grid ux:Name="loginArea" Row="1" Padding="0,10" RowCount="4" Columns="auto,1*" Height="160" MaxWidth="400">
+
+				<TextInput Row="0" Column="1" PlaceholderText="full name" PlaceholderColor="#999" TextColor="#000" CaretColor="#fff" />
+				<Rectangle Row="0" Column="0" Alignment="Bottom" ColumnSpan="2" Height="1" Color="#fff" />
+
+				<TextInput Row="1" Column="1" PlaceholderText="mobile number" PlaceholderColor="#999" TextColor="#000" CaretColor="#fff" />
+				<Rectangle Row="1" Column="0" Alignment="Bottom" ColumnSpan="2" Height="1" Color="#fff" />
+
+				<!-- <Image     Row="0" Column="0" File="Assets/user_icon.png" Width="20" Height="20" Margin="10,0,30,0" Alignment="Left"/> -->
+				<TextInput Row="2" Column="1" PlaceholderText="email" PlaceholderColor="#999" TextColor="#000" CaretColor="#fff" />
+				<Rectangle Row="2" Column="0" Alignment="Bottom" ColumnSpan="2" Height="1" Color="#fff" />
+
+				<!-- <Image     Row="1" Column="0" File="Assets/password_icon.png" Width="20" Height="20" Margin="10,0,30,0" Alignment="Left"/> -->
+				<TextInput Row="3" Column="1" PlaceholderText="Password" PlaceholderColor="#999" TextColor="#000" CaretColor="#fff" IsPassword="true" />
+				<Rectangle Row="3" Column="0" Alignment="Bottom" ColumnSpan="2" Height="1" Color="#fff" />
+			</Grid>
+		</Grid>
+
+</Panel>
+</App>

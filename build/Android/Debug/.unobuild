@@ -1,0 +1,4 @@
+$: -1905637576
+BuildCommand: build.sh
+RunCommand: run.sh
+Product: dynamic-tab-bar.apk

@@ -1,0 +1,20 @@
+{
+  "RootNamespace":"",
+  "Version": "1",
+  "VersionCode": "1",
+  "Packages": [
+    "Fuse",
+    "FuseJS"
+  ],
+  "Mobile": {
+  	"Orientations": "Portrait"
+  },
+  "Includes": [
+    "*"
+  ],
+  "Android": {
+    "VersionName": "$(Version)",
+    "Icons": {}
+      
+    }
+}

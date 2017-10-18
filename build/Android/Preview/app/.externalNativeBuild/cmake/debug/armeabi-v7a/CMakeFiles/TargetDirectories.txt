@@ -1,0 +1,3 @@
+/Users/phoenix/Fuse/app_payin/dynamic-tab-bar/build/Android/Preview/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/phoenix/Fuse/app_payin/dynamic-tab-bar/build/Android/Preview/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/phoenix/Fuse/app_payin/dynamic-tab-bar/build/Android/Preview/app/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/dynamictabbar.dir
